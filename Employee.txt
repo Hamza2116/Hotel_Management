@@ -1,0 +1,3 @@
+[hkr.Employee@5e9f23b4]
+[hkr.Employee@5e9f23b4Employee Password='aasd', employeeCounter=1]
+[Person{firstName='sad', lastName='asdsda', personNumber='\4s5a4ds', phoneNumber='asdasa6'}Employee Password='asd', employeeCounter=1]

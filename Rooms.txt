@@ -1,0 +1,7 @@
+[Hotel{availableRooms=3, Booking=false}]
+[Hotel{availableRooms=1, Booking=true}]
+[Hotel{availableRooms=3, Booking=true}]
+[Hotel Rooms=4, Booking=true]
+[Hotel Rooms=5, Booking=true]
+[Hotel Rooms=6, Booking=true]
+[Hotel Rooms=6, Booking=true, Hotel Rooms=7, Booking=true]
