@@ -1,14 +1,15 @@
 package hkr;
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import static java.lang.System.*;
 
 public class Main {
-    ArrayList<Hotel> rooms = new ArrayList<>();
+    private ArrayList<Hotel> rooms = new ArrayList<>();
     ArrayList<Employee> employee = new ArrayList<>();
     ArrayList<Admin> admins = new ArrayList<>();
-    int empCounter = 0;
+    int empCounter;
     int admCounter = 1;
     int roomCounter = 0;
     int bookingCounter = 0;
@@ -34,26 +35,32 @@ public class Main {
                     input.nextLine();
                     System.out.println("Enter your Password");
                     String pass = input.nextLine();
-                    adminVerify(adminId, pass);
+                    adminVerify(adminId,pass);
+                    break;
+                case 2:
+                    out.println("Enter Your Id");
+                    int employeeId = input.nextInt();
+                    out.println("Enter your Password");
+                    String passw = input.nextLine();
                     break;
             }
         }
     }
-    public void adminVerify(int adId, String pass){
+    public void adminVerify(int adId,String pass){
         if (adId == Admin1.getAdminCounter()) {
-            if (pass.equals(Admin1.getAdminPassword())) {
-                System.out.format("%s! You have successfully Logged In%n", Admin1.getFirstName());
-            }
-            else{
-                System.out.println("Your Password is Wrong!");
+                if (pass.equals(Admin1.getAdminPassword())) {
+                    System.out.format("%s! You have successfully Logged In%n", Admin1.getFirstName());
+                } else {
+                    System.out.println("Your Password is Wrong!");
+                    System.out.println("Please Try Again");
+                    showMenu();
+                }
+            } else {
+                System.out.println("Your Admin Id is Wrong!");
                 System.out.println("Please Try Again");
+                showMenu();
             }
-        }
-        else{
-            System.out.println("Your Admin Id is Wrong!");
-            System.out.println("Please Try Again");
-        }
-        adminMenu();
+       adminMenu();
     }
     public void adminMenu() {
         Scanner input = new Scanner(System.in);
@@ -69,6 +76,7 @@ public class Main {
         System.out.println("9. Remove a employee");
         System.out.println("10. Remove a admin");
         System.out.println("11. Remove a Booking");
+        System.out.println("12. Exit");
         int inp = input.nextInt();
         switch(inp){
             case 1:
@@ -92,17 +100,37 @@ public class Main {
             case 7:
                 createAdmin();
                 break;
+            case 8:
+                removeRoom();
+                break;
+            case 9:
+                removeEmployee();
+                break;
+            case 10:
+                removeAdmin();
+                break;
+            case 11:
+                removeBooking();
+                break;
+            case 12:
+                showMenu();
+                break;
+            default:
+                out.println("You have entered incorrect choice!");
         }
     }
     public void createRoom(){
         Scanner input = new Scanner(System.in);
         System.out.println("Enter the number of room");
-        int room = input.nextInt();
-        System.out.println("Does it have a booking");
-        boolean booking = input.nextBoolean();
+        String room = input.nextLine();
+        System.out.println("Does it have a booking(Y or N)");
+        String booking = input.nextLine();
         roomCounter++;
-        if(booking == true){
+        if(booking.equalsIgnoreCase("y")){
             bookingCounter++;
+            booking = "Yes";
+        }else if(booking.equalsIgnoreCase("n")){
+            booking = "No";
         }
         Hotel hotel = new Hotel(room,booking,bookingCounter);
         rooms.add(hotel);
@@ -110,7 +138,10 @@ public class Main {
             FileWriter fw = new FileWriter("Rooms.txt",true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
-            pw.println(rooms);
+            for(int i = 0;i<rooms.size();i++) {
+                pw.format("Room No =%s ",rooms.get(i).getAvailableRooms());
+                pw.format("Booking =%s%n",rooms.get(i).getBooking());
+            }
             pw.close();
         } catch (IOException e) {
             out.println("Error!");
@@ -143,14 +174,18 @@ public class Main {
         String phNumber = input.nextLine();
         System.out.println("Enter the Password of Employee");
         String pass = input.nextLine();
-        empCounter++;
+
         Employee employee1 = new Employee(fname,lname,pNumber,phNumber,pass,empCounter);
-        employee.add(employee1);
         try {
             FileWriter fw = new FileWriter("Employee.txt",true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
-            pw.println(employee);
+            pw.format("Employee Id =%d ",employee1.getEmployeeCounter());
+            pw.format("Employee First Name =%s ",employee1.getFirstName());
+            pw.format("Employee Last Name =%s ",employee1.getLastName());
+            pw.format("Employee Personal Number =%s ",employee1.getPersonNumber());
+            pw.format("Employee Phone Number =%s ",employee1.getPhoneNumber());
+            pw.format("Employee Password =%s%n",employee1.getEmployeePassword());
             pw.close();
         } catch (IOException e) {
             out.println("Error!");
@@ -183,14 +218,17 @@ public class Main {
         String phNumber = input.nextLine();
         System.out.println("Enter the Password of Admin");
         String pass = input.nextLine();
-        admCounter++;
-        Admin admin2 = new Admin(fname,lname,pNumber,phNumber,pass,admCounter);
-        admins.add(admin2);
+        Admin admin2 = new Admin(fname,lname,pNumber,phNumber,pass,admCounter++);
         try {
             FileWriter fw = new FileWriter("Admin.txt",true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
-            pw.println(admins);
+                pw.format("Admin Id =%d ",admin2.getAdminCounter());
+                pw.format("Admin First Name =%s ",admin2.getFirstName());
+                pw.format("Admin Last Name =%s ",admin2.getLastName());
+                pw.format("Admin Personal Number =%s ",admin2.getPersonNumber());
+                pw.format("Admin Phone Number =%s ",admin2.getPhoneNumber());
+                pw.format("Admin Password =%s%n",admin2.getAdminPassword());
             pw.close();
         } catch (IOException e) {
             out.println("Error!");
@@ -211,12 +249,151 @@ public class Main {
         }
         adminMenu();
     }
-    public void showBookings(){
-        System.out.println("The Bookings are:"+bookingCounter);
-        for(int i = 0;i<rooms.size();i++){
-            if(rooms.get(i).getBooking()==true){
-                System.out.format("Room Number is:%d%n",rooms.get(i).getAvailableRooms());
+    public void showBookings() {
+        try {
+            String str = "Booking =Yes";
+            Scanner scanner = new Scanner(new File("Rooms.txt"));
+            if (!scanner.equals(str)) {
+                out.println("There is no booking");
+            } else {
+                while (scanner.hasNextLine()) {
+                    String s = scanner.nextLine();
+                    if (s.contains(str)) {
+                        out.println("" + s);
+                    }
+                }
+                scanner.close();
             }
+        } catch (IOException e) {
+            out.println("File Not Found!");
+        }
+        out.println("Done");
+    }
+    public void removeRoom() {
+        try {
+            out.println("Enter the room No you want to remove");
+            Scanner input = new Scanner(System.in);
+            String str = input.nextLine();
+            File oldF = new File("Rooms.txt");
+            File newF = new File("tp.txt");
+            Scanner scanner = new Scanner(oldF);
+            while (scanner.hasNextLine()) {
+                String s = scanner.nextLine();
+                if (!s.contains(str)) {
+                    out.println(""+s);
+                    FileWriter fw = new FileWriter(newF, true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    PrintWriter pw = new PrintWriter(bw);
+                    pw.println("" + s);
+                    pw.close();
+                }
+            }scanner.close();
+            oldF.delete();
+            File tempF = new File("Rooms.txt");
+            newF.renameTo(tempF);
+        }catch(IOException e){
+            out.println("File Not Found!");
+        }
+        out.println("Done");
+    }
+    public void removeAdmin() {
+        try {
+            out.println("Enter the Admin name you want to remove");
+            Scanner input = new Scanner(System.in);
+            String str = input.nextLine();
+            File oldFile = new File("Admin.txt");
+            File newFile = new File("temp.txt");
+            Scanner scanner = new Scanner(oldFile);
+            while (scanner.hasNextLine()) {
+                String s = scanner.nextLine();
+                if (!s.contains(str)) {
+                    out.println(""+s);
+                    FileWriter fw = new FileWriter(newFile, true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    PrintWriter pw = new PrintWriter(bw);
+                    pw.println("" + s);
+                    pw.close();
+                }
+            }scanner.close();
+            oldFile.delete();
+            File tempFile = new File("Admin.txt");
+            newFile.renameTo(tempFile);
+        }catch(IOException e){
+            out.println("File Not Found!");
+        }
+        out.println("Done");
+    }
+    public void removeEmployee(){
+        try {
+            out.println("Enter the Employee name you want to remove");
+            Scanner input = new Scanner(System.in);
+            String str = input.nextLine();
+            File oldFile = new File("Employee.txt");
+            File newFile = new File("tmpo.txt");
+            Scanner scanner = new Scanner(oldFile);
+            while (scanner.hasNextLine()) {
+                String s = scanner.nextLine();
+                if (!s.contains(str)) {
+                    out.println(""+s);
+                    FileWriter fw = new FileWriter(newFile, true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    PrintWriter pw = new PrintWriter(bw);
+                    pw.println("" + s);
+                    pw.close();
+                }
+            }scanner.close();
+            oldFile.delete();
+            File tempFile = new File("Employee.txt");
+            newFile.renameTo(tempFile);
+        }catch(IOException e){
+            out.println("File Not Found!");
+        }
+        out.println("Done");
+    }
+    public void removeBooking() {
+        try {
+            String str = "Booking =Yes";
+            Scanner scanner = new Scanner(new File("Rooms.txt"));
+            if (!scanner.equals(str)) {
+                out.println("There is no booking");
+            } else {
+                while (scanner.hasNextLine()) {
+                    String s = scanner.nextLine();
+                    if (s.contains(str)) {
+                        out.println("" + s);
+                    }
+                }
+                scanner.close();
+            }
+        } catch (IOException e) {
+            out.println("File Not Found!");
+        }
+        out.println("Done");
+        try {
+            out.println("Enter the Room Number you want to remove the booking");
+            Scanner input = new Scanner(System.in);
+            String str = input.nextLine();
+            File oldFile = new File("Rooms.txt");
+            File newFile = new File("tmp.txt");
+                Scanner scanner = new Scanner(oldFile);
+                while (scanner.hasNextLine()) {
+                    String s = scanner.nextLine();
+                    if (!s.contains(str)) {
+                        out.println("" + s);
+                        FileWriter fw = new FileWriter(newFile, true);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        PrintWriter pw = new PrintWriter(bw);
+                        pw.println("" + s);
+                        pw.close();
+                    }
+                }
+                scanner.close();
+                oldFile.delete();
+                File tempFile = new File("Rooms.txt");
+                newFile.renameTo(tempFile);
+            } catch(IOException e){
+                out.println("File Not Found!");
+            }
+            out.println("Done");
         }
     }
-}

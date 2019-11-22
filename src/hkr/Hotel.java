@@ -1,29 +1,29 @@
 package hkr;
 
 public class Hotel {
-    private int availableRooms;
-    private boolean booking;
+    private String availableRooms;
+    private String booking;
     private int bookingCounter;
 
-    public Hotel(int availableRooms, boolean booking,int bookingCounter) {
+    public Hotel(String availableRooms, String booking,int bookingCounter) {
         this.availableRooms = availableRooms;
         this.booking = booking;
         this.bookingCounter = bookingCounter;
     }
 
-    public int getAvailableRooms() {
+    public String getAvailableRooms() {
         return availableRooms;
     }
 
-    public void setAvailableRooms(int availableRooms) {
+    public void setAvailableRooms(String availableRooms) {
         this.availableRooms = availableRooms;
     }
 
-    public boolean getBooking() {
+    public String getBooking() {
         return booking;
     }
 
-    public void setBooking(boolean booking) {
+    public void setBooking(String booking) {
         booking = booking;
     }
 
